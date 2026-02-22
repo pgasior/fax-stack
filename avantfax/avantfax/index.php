@@ -1,0 +1,83 @@
+<?php
+/**
+ * AvantFAX - "Web 2.0" HylaFAX management
+ *
+ * PHP 5 only
+ *
+ * @author		David Mimms <david@avantfax.com>
+ * @copyright	2005 - 2007 MENTALBARCODE Software, LLC
+ * @copyright	2007 - 2008 iFAX Solutions, Inc.
+ * @license		http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ */
+
+	require_once 'includes/classes.php';
+
+	avantfax_session();
+	
+	if (array_key_exists(USERSESSION, $_SESSION)) {
+		if ($_SESSION[USERSESSION]->check_login()) {
+			header("Location: inbox.php");
+			exit;
+		}
+	}
+	
+	$error = NULL;
+	
+	/******************************************************************************************************************************
+			SETUP FORM RULES
+	 ******************************************************************************************************************************/
+	$formdata = new FormRules;
+	$formdata->newRule('username');
+	$formdata->newRule('password');
+	$formdata->newRule('_submit_check');
+    $formdata->newRule('token', null, FR_STRING, null, null, "Token is required", true);
+
+	$_SESSION[USERSESSION] = new AFUserAccount;
+
+	/******************************************************************************************************************************
+			PROCESS FORM
+	 ******************************************************************************************************************************/
+	if (array_key_exists('_submit_check', $_POST)) {
+		$formdata->processForm($_POST);
+		
+		if ($formerror = $formdata->getFormErrors()) {
+			$error = "<li>".join("<li>", $formerror);
+		}
+
+        if (!validate_csrf_token($formdata->token)) {
+            $error .= "<li>Token mismatch</li>";
+        }
+		
+		if (!$error) {
+			if ($ALTERNATE_AUTH_ENABLE) {
+				if ($_SESSION[USERSESSION]->login_alternate_auth($formdata->username, $formdata->password)) {
+					header("Location: inbox.php");
+					exit;
+				}
+			}
+			
+			if (!$ALTERNATE_AUTH_ENABLE || ($ALTERNATE_AUTH_ENABLE && $ALTERNATE_AUTH_FALLBACK)) {
+				if ($_SESSION[USERSESSION]->login($formdata->username, $formdata->password)) {
+					if ($_SESSION[USERSESSION]->is_expired()) {
+						header("Location: pwdexpired.php");
+					} else {
+						header("Location: inbox.php");
+					}
+					exit;
+				}
+			}
+			
+			$error = $_SESSION[USERSESSION]->get_error();
+		}
+    }
+
+    session_regenerate_id(true);
+    $formdata->token = setup_csrf_token();
+
+	/******************************************************************************************************************************
+			SHOW TEMPLATE
+	 ******************************************************************************************************************************/
+	$usmarty = new UserSmarty;
+	$usmarty->assign('error',		$error);
+    $usmarty->assign('fvalues',     	$formdata->htmlReady());
+	display_template('index.tpl',	$usmarty);
