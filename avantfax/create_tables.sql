@@ -47,7 +47,7 @@ faxperpageinbox   INT,
 faxperpagearchive INT,
 superuser      BOOL DEFAULT FALSE,
 can_del        BOOL DEFAULT FALSE,
-last_mod       TIMESTAMP,
+last_mod       TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 last_login     TIMESTAMP,
 last_ip        VARCHAR(15),
 language       VARCHAR(5),
@@ -171,14 +171,14 @@ callid          VARCHAR(100)
 ) DEFAULT CHARACTER SET utf8;
 
 
-INSERT INTO UserAccount SET name='AvantFAX Admin', username='admin', password='5f4dcc3b5aa765d61d8327deb882cf99', wasreset=TRUE, email='root@localhost', is_admin = TRUE, language = 'en', acc_enabled = TRUE, any_modem = TRUE, superuser = TRUE;
-INSERT INTO UserPasswords SET uid=1, pwdhash='5f4dcc3b5aa765d61d8327deb882cf99';
+-- INSERT INTO UserAccount SET name='AvantFAX Admin', username='admin', password='5f4dcc3b5aa765d61d8327deb882cf99', wasreset=TRUE, email='root@localhost', is_admin = TRUE, language = 'en', acc_enabled = TRUE, any_modem = TRUE, superuser = TRUE;
+-- INSERT INTO UserPasswords SET uid=1, pwdhash='5f4dcc3b5aa765d61d8327deb882cf99';
 
-INSERT INTO AddressBook SET company = 'XXXXXXX';
-INSERT INTO AddressBookFAX SET abook_id = 1, faxnumber = 'XXXXXXX';
+-- INSERT INTO AddressBook SET company = 'XXXXXXX';
+-- INSERT INTO AddressBookFAX SET abook_id = 1, faxnumber = 'XXXXXXX';
 
-INSERT INTO CoverPages SET title='Generic A4', file='cover.ps';
-INSERT INTO CoverPages SET title='Generic Letter', file='cover-letter.ps';
-INSERT INTO CoverPages SET title='Generic HTML', file='coverpage.html';
+-- INSERT INTO CoverPages SET title='Generic A4', file='cover.ps';
+-- INSERT INTO CoverPages SET title='Generic Letter', file='cover-letter.ps';
+-- INSERT INTO CoverPages SET title='Generic HTML', file='coverpage.html';
 
 -- SHOW TABLES;

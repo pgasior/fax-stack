@@ -167,7 +167,7 @@
             session_set_cookie_params([
                 'lifetime' => $maxlifetime,
                 'path' => '/',
-                'domain' => $_SERVER['HTTP_HOST'],
+                // 'domain' => $_SERVER['HTTP_HOST'],
                 'secure' => $secure,
                 'httponly' => $httponly,
                 'samesite' => $samesite

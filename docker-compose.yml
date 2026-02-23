@@ -1,0 +1,31 @@
+services:
+  fax:
+    image: fax-stack:latest
+    build: .
+    container_name: fax
+    ports:
+      - "4559:4559"
+      - "8888:80"
+    env_file:
+      - .env
+    volumes:
+      - type: bind
+        source: ./templates
+        target: /tmp/templates
+      - faxes:/var/www/avantfax/faxes
+    depends_on:
+      - mariadb
+    links:
+      - mariadb
+
+
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    env_file:
+      - .env
+    volumes:
+      - db_data:/var/lib/mysql
+volumes:
+  db_data:
+  faxes:

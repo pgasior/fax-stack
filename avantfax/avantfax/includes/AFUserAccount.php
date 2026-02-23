@@ -136,7 +136,7 @@ class AFUserAccount
 			$this->uid = $this->useraccount->get_id();
 			
 			// Add them to HylaFAX
-			system("$SUDO $FAXADDUSER -u ".escapeshellarg($this->uid)." -p ".escapeshellarg($pwdxemail)." ".escapeshellarg($this->dbdata['username']));
+			system("$SUDO $FAXADDUSER -c -u ".escapeshellarg($this->uid)." -p ".escapeshellarg($pwdxemail)." ".escapeshellarg($this->dbdata['username']));
 			
 			avantfaxlog("class UserAccount> Account created: $this->name (".$this->dbdata['username'].") &lt;$this->email&gt; Pwd: $pwdxemail");
 	
@@ -243,7 +243,7 @@ class AFUserAccount
 			if ($this->userpasswords->log_password($passwordHash, $this->uid)) {
 				avantfaxlog("class UserAccount> Successfully changed password for ".$this->dbdata['username']);
 				// change their hylafax password
-				system("$SUDO $FAXDELUSER '".escapeshellarg($this->dbdata['username'])."' ; $SUDO $FAXADDUSER -u ".escapeshellarg($this->uid)." -p ".escapeshellarg($pwd)." ".escapeshellarg($this->dbdata['username']));
+				system("$SUDO $FAXDELUSER '".escapeshellarg($this->dbdata['username'])."' ; $SUDO $FAXADDUSER -c -u ".escapeshellarg($this->uid)." -p ".escapeshellarg($pwd)." ".escapeshellarg($this->dbdata['username']));
 				return true;
 			}
 		}

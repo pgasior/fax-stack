@@ -1,0 +1,11 @@
+device          /dev/ttyIAX
+owner           uucp:uucp
+mode            660
+port            4569
+refresh         60
+server          172.17.0.6
+peername        iaxmodem2
+secret          iaxmodempass
+cidname         John Doe
+cidnumber       8005551212
+codec           slinear
