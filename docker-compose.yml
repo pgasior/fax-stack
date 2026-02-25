@@ -3,6 +3,7 @@ services:
     image: fax-stack:latest
     build: .
     container_name: fax
+    restart: unless-stopped
     ports:
       - "4559:4559"
       - "8888:80"
@@ -21,6 +22,7 @@ services:
 
   mariadb:
     image: mariadb:latest
+    restart: unless-stopped
     container_name: mariadb
     env_file:
       - .env
