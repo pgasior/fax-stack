@@ -15,7 +15,7 @@
 
 RETRIES=30
 
-until mariadb-admin -hmariadb --user=avantfax --password="${MYSQL_ROOT_PASSWORD}" ping || [ $RETRIES -eq 0 ]; do
+until mariadb-admin -hmariadb --user=avantfax --password="${MYSQL_PASSWORD}" ping || [ $RETRIES -eq 0 ]; do
   echo "Waiting for MySQL, $RETRIES attempts left..."
   RETRIES=$((RETRIES - 1))
   sleep 2
@@ -23,7 +23,7 @@ done
 
 [ $RETRIES -eq 0 ] && echo "MySQL did not start in time" && exit 1
 
-mysql -hmariadb --user=avantfax --password="${MYSQL_ROOT_PASSWORD}" avantfax < /tmp/avantfax/create_tables.sql
+mysql -hmariadb --user=avantfax --password="${MYSQL_PASSWORD}" avantfax < /tmp/avantfax/create_tables.sql
 
 # shellcheck disable=SC2016
 envsubst '$MYSQL_USER,$MYSQL_PASSWORD,$MYSQL_DATABASE' < /tmp/templates/local_config.php > /var/www/avantfax/includes/local_config.php
